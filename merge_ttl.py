@@ -14,7 +14,7 @@ def merge(dir):
             graph = Graph()
             graph.parse(fullname, format="turtle")
             final_graph = final_graph + graph
-    final_graph.serialize("ontology_merged_cropped", format='turtle')
+    final_graph.serialize("ontology_merged", format='turtle')
 
 
 
