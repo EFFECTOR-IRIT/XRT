@@ -12,6 +12,7 @@ import PyPDF2
 enums = {}
 elements = []
 
+
 def get_pdf_enumvalue_description(value, my_text): 
     if not my_text:
         return
@@ -154,7 +155,7 @@ def parse_dom(filename, sourcename, pdffile):
                     if full_prefix[-1] != "/": full_prefix += "#"
                     etype = full_prefix+etype[etype.index(":")+1:]
         return etype      
-                  
+
     def convert_data_prop(node, my_class, my_class_name, my_text):
         node_name = node.attrib["name"]
         if (node_name+my_class_name) in elements:
@@ -176,16 +177,15 @@ def parse_dom(filename, sourcename, pdffile):
         g.add(( NS[node_name], RDFS.domain, URIRef(my_class) ))
         if "minOccurs" in node.attrib:
             if node.attrib["minOccurs"] != "0":
-                print("========== min ================")
                 infixowl.Restriction(NS[node_name], graph=g, minCardinality=Literal(int(node.attrib["minOccurs"])))
+        else:
+            infixowl.Restriction(NS[node_name], graph=g, minCardinality=Literal(1))
+
         if "maxOccurs" in node.attrib:
             if node.attrib["maxOccurs"] != "unbounded":
-                print("========== max ================")
                 infixowl.Restriction(NS[node_name], graph=g, maxCardinality=Literal(int(node.attrib["maxOccurs"])))
-
-                
-        
-
+        else:
+            infixowl.Restriction(NS[node_name], graph=g, maxCardinality=Literal(1))
 
     def convert_object_prop(node, my_class, my_class_name, ename, my_text, nary=False):
         print(ename + " is an object property of " + my_class_name)
@@ -197,7 +197,7 @@ def parse_dom(filename, sourcename, pdffile):
         g.add((NS[property_prefix+node_name], RDF.type, OWL.ObjectProperty))
         g.add((NS[property_prefix+node_name], RDFS.domain, URIRef(my_class)))  
         etype = resolve_type_instr(node.attrib["type"])
-       
+
         if "http" in etype:
             g.add((NS[property_prefix+node_name], RDFS.range, URIRef(etype)))
         else:
@@ -212,15 +212,17 @@ def parse_dom(filename, sourcename, pdffile):
         #     if comment:
         #         g.add(( NS[property_prefix+node_name], RDFS.comment, Literal(comment)))
 
-        
         elements.append(node_name+my_class_name)
         if "minOccurs" in node.attrib:
-            if node.attrib["minOccurs"] != "0":                
-                infixowl.Restriction(NS[node_name], graph=g, minCardinality=Literal(int(node.attrib["minOccurs"])))
+            if node.attrib["minOccurs"] != "0":
+                infixowl.Restriction(NS[property_prefix+node_name], graph=g, minCardinality=Literal(int(node.attrib["minOccurs"])))
+        else:
+            infixowl.Restriction(NS[property_prefix+node_name], graph=g, minCardinality=Literal(1))
         if "maxOccurs" in node.attrib:
             if node.attrib["maxOccurs"] != "unbounded":
-                infixowl.Restriction(NS[node_name], graph=g, maxCardinality=Literal(int(node.attrib["maxOccurs"])))
-
+                infixowl.Restriction(NS[property_prefix+node_name], graph=g, maxCardinality=Literal(int(node.attrib["maxOccurs"])))
+        else:
+            infixowl.Restriction(NS[property_prefix+node_name], graph=g, maxCardinality=Literal(1))
 
     def convert_nary_relation(node, my_class, my_class_name, ename, my_text):
         #print(ename + " is an nary class")
@@ -338,8 +340,6 @@ def parse_dom(filename, sourcename, pdffile):
                 # comment = get_pdf_enumvalue_description(value, my_text)
                 # if comment:
                 #     g.add(( NS[node_name  + "_" +  value], RDFS.comment, Literal(comment))) 
-                    
-
      
     def convert_class(node, sourcename):
         my_class_name = node.attrib["name"]
@@ -438,8 +438,7 @@ def parse_dom(filename, sourcename, pdffile):
     
     #graph
     g = Graph()
-   
-    
+
     for k, v in root.nsmap.items():
         if k is not None:
             g.bind(k, v)
@@ -449,11 +448,11 @@ def parse_dom(filename, sourcename, pdffile):
         NS = Namespace(root.attrib["targetNamespace"])
     else:
         NS = Namespace("http://melodi.irit.fr/ontologies/example#")
-    
+
     g.bind(None, NS)
     g.bind("owl", OWL)
     g.bind("xsd", XSD+"#")
-    g.bind("ecise", "http://melodi.irit.fr/ontologies/ecise")   
+    g.bind("ecise", "http://melodi.irit.fr/ontologies/ecise")
     property_prefix = "has"
     g.add(( URIRef("http://melodi.irit.fr/ontologies/ecise#EnumerationType"), RDFS.subClassOf, OWL.Thing))
     g.add((URIRef("http://melodi.irit.fr/ontologies/ecise#AssociationClass"), RDFS.subClassOf, OWL.Thing))
