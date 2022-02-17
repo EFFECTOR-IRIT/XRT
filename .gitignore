@@ -162,3 +162,5 @@ tbcfe/
 *.owl
 *.xls
 *.pdf
+*.json
+*.xsd
