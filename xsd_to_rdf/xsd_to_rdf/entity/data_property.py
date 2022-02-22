@@ -1,16 +1,16 @@
 from rdflib import OWL, RDFS, Namespace, Literal
 from rdflib.extras import infixowl
 from xsd_to_rdf.entity.entity import Entity
-from config import config
+from xsd_to_rdf.settings import settings
 
 
 # TODO: no global
-RESTRICTION_USAGE = config.get('data_property').get('restriction_usage')
-MIN_CARD_TAG = config.get('common').get('min_card_tag')
-MAX_CARD_TAG = config.get('common').get('max_card_tag')
-EXCLUDED_STRING = config.get('data_property').get('excluded_string')
-MINUSCULE = config.get('data_property').get('minuscule')
-ACCRONYM_CASE = config.get('data_property').get('accronym_case')
+RESTRICTION_USAGE = settings.get('xsd_nodes').get('data_property').get('restriction_usage')
+MIN_CARD_TAG = settings.get('xsd_nodes').get('common').get('min_card_tag')
+MAX_CARD_TAG = settings.get('xsd_nodes').get('common').get('max_card_tag')
+EXCLUDED_STRING = settings.get('xsd_nodes').get('data_property').get('excluded_string')
+MINUSCULE = settings.get('xsd_nodes').get('data_property').get('minuscule')
+ACCRONYM_CASE = settings.get('xsd_nodes').get('data_property').get('accronym_case')
 
 
 class DataProperty(Entity):

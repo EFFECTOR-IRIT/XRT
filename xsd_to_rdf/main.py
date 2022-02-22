@@ -3,25 +3,23 @@ import sys
 import glob
 import re
 from lxml import etree
-from config import config, ontology
 from xsd_to_rdf.graph.graph import Graph
 from xsd_to_rdf.entity_picker.entity_picker import EntityPicker
+from config import config
 
 
 # TODO: no global 
-INPUT_DIR = config.get('input_dir')
-OUTPUT_DIR = config.get('output_dir')
-OUTPUT_FILE = config.get('output_filename')
-OUPUT_FORMAT = config.get('output_format')
-NODE_REGEX = config.get('node_regex')
-NODE_TYPE = config.get('node_type')
+INPUT_DIR = config.get('files').get('input_dir')
+OUTPUT_DIR = config.get('files').get('output_dir')
+OUTPUT_FILE = config.get('files').get('output_filename')
+OUPUT_FORMAT = config.get('files').get('output_format')
 
 
 class MainProcess:
 
     def run(self):
         # 1 - Initialize graph
-        graph = Graph(ontology.get('namespaces'))
+        graph = Graph()
         # 2 - Get files from input
         files = glob.glob(
             INPUT_DIR + '**/*.xsd',
@@ -32,7 +30,12 @@ class MainProcess:
             namespace, nodes = self.extract_sources_from_filename(filename)
             # 4 - build entities from nodes (TODO: data property first level)
             for node in nodes:
-                entity = self.get_entity(graph, node, namespace)
+                node_type = etree.QName(node).localname
+                entity = EntityPicker().get_entity(node_type)(
+                    graph = graph,
+                    name = node.attrib['name'],
+                    namespace = namespace,
+                    node = node)
                 entity.convert_to_rdf()
         # 6 - serialize graph in chosen format (config)
         output = os.path.join(OUTPUT_DIR, OUTPUT_FILE)
@@ -44,7 +47,7 @@ class MainProcess:
         Extract nodes from XSD file
         """
         parser = etree.XMLParser(remove_comments=True)
-        node_regex = re.compile(NODE_REGEX)
+        node_regex = re.compile(r'.*Type')
         with open(filename, encoding='utf8') as f:
             root = etree.parse(f, parser).getroot()
         # retrieve class and sub-elements
@@ -53,18 +56,6 @@ class MainProcess:
         return namespace, list(filter(
             lambda child : re.match(node_regex, child.tag),
             children))
-
-    # TODO: move this function
-    def get_entity(self, graph, node, namespace):
-        """
-        Convert a node to a rdfentity
-        """
-        node_type = etree.QName(node).localname
-        return EntityPicker().get_entity(node_type)(
-            graph = graph,
-            name = node.attrib['name'],
-            namespace = namespace,
-            node = node)
 
 
 if __name__ == "__main__":

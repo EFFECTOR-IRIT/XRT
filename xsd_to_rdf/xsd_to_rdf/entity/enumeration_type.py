@@ -2,11 +2,11 @@ from rdflib import OWL, RDF, RDFS, Literal
 from xsd_to_rdf.entity.entity import Entity
 from xsd_to_rdf.entity.thing_class import ThingClass
 from xsd_to_rdf.entity.individual import Individual
-from config import config, ontology
+from xsd_to_rdf.settings import settings
 
 # TODO: no global 
-SUPER_CLASSES = ontology.get('super_classes')
-ENUM_TAG = config.get('enumeration_type').get('enum_tag')
+SUPER_CLASSES = settings.get('ontology').get('super_classes')
+ENUM_TAG = settings.get('xsd_nodes').get('enumeration_type').get('enum_tag')
 
 
 class EnumerationType(Entity):

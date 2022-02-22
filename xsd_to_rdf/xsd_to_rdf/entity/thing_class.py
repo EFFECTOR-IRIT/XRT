@@ -2,18 +2,19 @@ from rdflib import OWL, RDF, RDFS, Literal
 from xsd_to_rdf.entity.entity import Entity
 from xsd_to_rdf.entity.object_property import ObjectProperty
 from xsd_to_rdf.entity.data_property import DataProperty
-from config import config, ontology, xsd_types
+from xsd_to_rdf.settings import settings
 
 
 # TODO: no global 
-SUPER_CLASSES = ontology.get('super_classes')
-PARENT_TAG = config.get('common').get('parent_tag',)
-SEQUENCE_TAG = config.get('common').get('sequence_tag')
-ELEMENT_TAG = config.get('common').get('element_tag')
-RESTRICTION_TAG = config.get('common').get('restriction_tag')
-MIN_VALUE_TAG = config.get('common').get('min_value_tag')
-MAX_VALUE_TAG = config.get('common').get('max_value_tag')
-EXCLUDED_PARENTS = config.get('thing_class').get('excluded_parents')
+SUPER_CLASSES = settings.get('ontology').get('super_classes')
+PARENT_TAG = settings.get('xsd_nodes').get('common').get('parent_tag',)
+SEQUENCE_TAG = settings.get('xsd_nodes').get('common').get('sequence_tag')
+ELEMENT_TAG = settings.get('xsd_nodes').get('common').get('element_tag')
+RESTRICTION_TAG = settings.get('xsd_nodes').get('common').get('restriction_tag')
+MIN_VALUE_TAG = settings.get('xsd_nodes').get('common').get('min_value_tag')
+MAX_VALUE_TAG = settings.get('xsd_nodes').get('common').get('max_value_tag')
+EXCLUDED_PARENTS = settings.get('xsd_nodes').get('thing_class').get('excluded_parents')
+XSD_TYPES = settings.get('xsd_types')
 
 
 class ThingClass(Entity):
@@ -47,7 +48,7 @@ class ThingClass(Entity):
                 domain = self
             )
             # TODO: rework dataproperty
-            if element.attrib.get('type') in xsd_types.values():
+            if element.attrib.get('type') in XSD_TYPES.values():
                 options.update(dict(xsd_type = element.attrib.get('type')))
                 entity = DataProperty(**options)
             elif restriction is not None:

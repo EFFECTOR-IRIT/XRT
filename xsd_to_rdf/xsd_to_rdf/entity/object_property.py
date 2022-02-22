@@ -1,13 +1,13 @@
 from rdflib import OWL, RDFS, Namespace, Literal
 from rdflib.extras import infixowl
 from xsd_to_rdf.entity.entity import Entity
-from config import config
+from xsd_to_rdf.settings import settings
 
 # TODO: no global 
-PREFIX = config.get('object_property').get('prefix')
-MIN_CARD_TAG = config.get('common').get('min_card_tag')
-MAX_CARD_TAG = config.get('common').get('max_card_tag')
-EXCLUDED_STRING = config.get('object_property').get('excluded_string')
+PREFIX = settings.get('xsd_nodes').get('object_property').get('prefix')
+MIN_CARD_TAG = settings.get('xsd_nodes').get('common').get('min_card_tag')
+MAX_CARD_TAG = settings.get('xsd_nodes').get('common').get('max_card_tag')
+EXCLUDED_STRING = settings.get('xsd_nodes').get('object_property').get('excluded_string')
 
 
 class ObjectProperty(Entity):

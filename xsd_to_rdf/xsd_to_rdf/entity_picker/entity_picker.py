@@ -1,6 +1,5 @@
 from xsd_to_rdf.entity.thing_class import ThingClass
 from xsd_to_rdf.entity.enumeration_type import EnumerationType
-# from xsd_to_rdf.entity.data_property import DataProperty
 
 
 class EntityPicker:

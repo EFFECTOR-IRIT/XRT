@@ -1,10 +1,11 @@
 from rdflib import RDFS, Literal, Namespace, RDF
-from config import config, ontology
+from xsd_to_rdf.settings import settings
 
 
 # TODO: no global
-COMMENT_TAG = config.get('common').get('comment_tag')
-DEFAULT_COMMENT = ontology.get('default_comment')
+COMMENT_TAG = settings.get('xsd_nodes').get('common').get('comment_tag')
+DEFAULT_COMMENT = settings.get('ontology').get('default_comment')
+
 
 class Entity:
 
