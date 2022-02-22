@@ -44,3 +44,8 @@ The generated ontology should be written and saved in the output folder.
 
 - Global variables should be passed as parameters to the different classes.
 - First level properties are considered as RDF classes (will be corrected in the next version)
+
+## Version 1.3.0
+
+- Metadata handler implementation
+- Known issues correction
