@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='xsd_to_rdf',
-    version='1.1',
+    version='1.1.0',
     packages=find_packages(exclude=['tests*']),
     license='MIT',
     description='Generate CISE & eCISE ontologies from XSD files',

@@ -1,5 +1,7 @@
 # XTR
 
+Version 1.1.0
+
 ## General
 
 XTR is a python module that aims at generating ontologies from models described in the XSD language. So far, the module has been tested on two different ontologies: CISE (from version 1.5.2 of the CISE data model) and e-CISE (from versions 2.2.1 and 2.4.0).
