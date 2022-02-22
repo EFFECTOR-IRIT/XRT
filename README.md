@@ -37,3 +37,8 @@ The XSD files containing the data model to be generated in ontological format sh
     make run
 
 The generated ontology should be written and saved in the output folder.
+
+## Known Issues
+
+- Global variables should be passed as parameters to the different classes.
+- First level properties are considered as RDF classes (will be corrected in the next version)
