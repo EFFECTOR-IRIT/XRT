@@ -1,6 +1,6 @@
 # XTR
 
-Version 1.1.0
+Version 1.2.0
 
 ## General
 
@@ -45,7 +45,6 @@ The generated ontology should be written and saved in the output folder.
 - Global variables should be passed as parameters to the different classes.
 - First level properties are considered as RDF classes (will be corrected in the next version)
 
-## Version 1.2.0
+## Version 1.2.1
 
-- Metadata handler implementation
 - Known issues correction
