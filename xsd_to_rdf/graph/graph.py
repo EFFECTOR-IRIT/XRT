@@ -20,7 +20,6 @@ class Graph:
 
     def set_metadata(self):
         self.graph.bind('dc', DC)
-        print(self.metadata.get('date'))
         self.graph.add((self.graph.identifier, RDF.type, OWL.Ontology))
         self.graph.add((self.graph.identifier, OWL.versionInfo, Literal(self.metadata.get('version'))))
         self.graph.add((self.graph.identifier, DC.title, Literal(self.metadata.get('title'))))
