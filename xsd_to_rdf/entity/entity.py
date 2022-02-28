@@ -4,7 +4,6 @@ from xsd_to_rdf.settings import settings
 
 # TODO: no global
 COMMENT_TAG = settings.get('xsd_nodes').get('common').get('comment_tag')
-DEFAULT_COMMENT = settings.get('ontology').get('default_comment')
 
 
 class Entity:
@@ -18,6 +17,7 @@ class Entity:
             .replace(')', ''))
         self.namespace = Namespace(kwargs.get('namespace'))
         self.node = kwargs.get('node')
+        self.options = kwargs.get('options')
         self.prefix = kwargs.get('namespace').rstrip('/').split('/').pop()
         self.type = None
         self.sub_elements = []
@@ -39,16 +39,16 @@ class Entity:
             annotation_tags = list(filter(
                 lambda child: COMMENT_TAG in child.tag, list(self.node)))
             if len(annotation_tags) == 0:
-                text = DEFAULT_COMMENT
+                text = self.options.get('default_comment')
             else:
                 if len(annotation_tags) > 1: raise ValueError(self.name)
                 [annotation_tag] = annotation_tags
                 if len(annotation_tag) > 1: raise ValueError(self.name)
                 if len(annotation_tag) == 0:
-                    text = DEFAULT_COMMENT
+                    text = self.options.get('default_comment')
                 else:
                     [comment_tag] = annotation_tag
-                    text = comment_tag.text if comment_tag.text else DEFAULT_COMMENT
+                    text = comment_tag.text if comment_tag.text else self.options.get('default_comment')
                 self.graph.add_triplet((
                     self.uri,
                     RDFS.comment,

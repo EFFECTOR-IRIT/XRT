@@ -6,7 +6,6 @@ from xsd_to_rdf.settings import settings
 
 
 # TODO: no global 
-SUPER_CLASSES = settings.get('ontology').get('super_classes')
 PARENT_TAG = settings.get('xsd_nodes').get('common').get('parent_tag',)
 SEQUENCE_TAG = settings.get('xsd_nodes').get('common').get('sequence_tag')
 ELEMENT_TAG = settings.get('xsd_nodes').get('common').get('element_tag')
@@ -39,18 +38,19 @@ class ThingClass(Entity):
                 if RESTRICTION_TAG in item.tag),
                 None)
             # TODO: rework options build
-            options = dict(
+            parameters = dict(
                 graph = self.graph,
                 name = element.attrib.get('name'),
                 namespace = self.namespace,
                 node = element,
+                options = self.options,
                 associated_class = self,
                 domain = self
             )
             # TODO: rework dataproperty
             if element.attrib.get('type') in XSD_TYPES.values():
-                options.update(dict(xsd_type = element.attrib.get('type')))
-                entity = DataProperty(**options)
+                parameters.update(dict(xsd_type = element.attrib.get('type')))
+                entity = DataProperty(**parameters)
             elif restriction is not None:
                 min_value = next((
                     item for item in restriction.getiterator()
@@ -60,12 +60,12 @@ class ThingClass(Entity):
                     item for item in restriction.getiterator()
                     if MAX_VALUE_TAG in item.tag),
                     None)
-                options.update(dict(
+                parameters.update(dict(
                     xsd_type = restriction.attrib.get('base'),
                     min_value = min_value.attrib.get('value'),
                     max_value = max_value.attrib.get('value'))
                 )
-                entity = DataProperty(**options)
+                entity = DataProperty(**parameters)
             elif element.attrib.get('type') is None and \
                 restriction is None:
                 element_sequence = next((
@@ -76,17 +76,18 @@ class ThingClass(Entity):
                     raise ValueError(element.attrib.get('name'))
                 if len(element_sequence) == 1:
                     [range] = element_sequence
-                    options.update(dict(
+                    parameters.update(dict(
                         range = range.attrib.get('type'))
                     )
-                    entity = ObjectProperty(**options)
+
+                    entity = ObjectProperty(**parameters)
                 else:
-                    entity = RelationshipClass(**options)
+                    entity = RelationshipClass(**parameters)
             else:
-                options.update(dict(
+                parameters.update(dict(
                     range = element.attrib.get('type'))
                 )
-                entity = ObjectProperty(**options)
+                entity = ObjectProperty(**parameters)
             entity.convert_to_rdf()
             self.sub_elements.append(entity)
 
@@ -130,7 +131,7 @@ class RelationshipClass(ThingClass):
 
     def set_super_element(self):
         default_super_class = next((
-            cls for cls in SUPER_CLASSES
+            cls for cls in self.options.get('super_classes')
             if cls.get('super_class_of') == __class__.__name__),
             None)
         if default_super_class is None: return
@@ -153,6 +154,7 @@ class RelationshipClass(ThingClass):
             name = self.associated_class.get_name,
             namespace = self.namespace,
             node = self.node,
+            options = self.options,
             domain = self,
             range = (self.prefix + ':' + self.associated_class.get_name)
         )

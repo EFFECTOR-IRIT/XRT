@@ -5,7 +5,6 @@ from xsd_to_rdf.entity.individual import Individual
 from xsd_to_rdf.settings import settings
 
 # TODO: no global 
-SUPER_CLASSES = settings.get('ontology').get('super_classes')
 ENUM_TAG = settings.get('xsd_nodes').get('enumeration_type').get('enum_tag')
 
 
@@ -28,13 +27,14 @@ class EnumerationType(Entity):
                     name = enum.attrib.get('value'),
                     namespace = self.namespace,
                     node = enum,
+                    options = self.options,
                     instance_of = self)
                 individual.convert_to_rdf()
                 self.sub_elements.append(individual)
 
     def set_super_element(self):
         default_super_class = next((
-            cls for cls in SUPER_CLASSES
+            cls for cls in self.options.get('super_classes')
             if cls.get('super_class_of') == __class__.__name__),
             None)
         if default_super_class is None: return

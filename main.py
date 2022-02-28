@@ -12,13 +12,15 @@ INPUT_DIR = config.get('files').get('input_dir')
 OUTPUT_DIR = config.get('files').get('output_dir')
 OUTPUT_FILE = config.get('files').get('output_filename')
 OUPUT_FORMAT = config.get('files').get('output_format')
-
+METADATA = config.get('metadata')
+OPTIONS = config.get('options')
 
 class MainProcess:
 
     def run(self):
         # 1 - Initialize graph
-        graph = Graph()
+        graph = Graph(config)
+        graph.set_metadata()
         # 2 - Get files from input
         files = glob.glob(
             INPUT_DIR + '**/*.xsd',
@@ -34,7 +36,8 @@ class MainProcess:
                     graph = graph,
                     name = node.attrib['name'],
                     namespace = namespace,
-                    node = node)
+                    node = node,
+                    options = OPTIONS)
                 entity.convert_to_rdf()
         # 6 - serialize graph in chosen format (config)
         output = os.path.join(OUTPUT_DIR, OUTPUT_FILE)
