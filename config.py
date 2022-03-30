@@ -5,19 +5,20 @@ config = dict(
     metadata = dict(
         title = 'ecise',
         creator = 'IRIT',
-        version = '1.3',
+        version = '1.3.3',
         date = datetime.now(),
-        source = '2.4.0',
+        source = '2.2.1',
         language = 'en'
     ),
     files = dict(
         input_dir = './input/',
         output_dir = './output/',
-        output_filename = 'ecise-ontology-1.3.ttl',
+        output_filename = 'ecise-ontology-1.3.3.ttl',
         output_format = 'turtle', # xml, json-ld, turtle
     ),
     options = dict(
-        base_uri = 'http://www.ecise.eu/datamodel/v1/',
+        use_single_base_uri = False, # True, False
+        base_uri = 'http://www.ecise.eu/datamodel/v1/ecise',
         default_comment = 'No description provided.',
         namespaces = {
             'owl': 'http://www.w3.org/2002/07/owl#',
@@ -27,7 +28,7 @@ config = dict(
         super_classes = [
             {
                 'label': 'EnumerationType',
-                'namespace': 'http://www.ecise.eu/datamodel/v1/enum/',
+                'namespace': 'http://www.cise.eu/datamodel/v1/enum/',
                 'super_class_of': 'EnumerationType'
             },
             {

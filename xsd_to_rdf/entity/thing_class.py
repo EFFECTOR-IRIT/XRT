@@ -136,6 +136,7 @@ class RelationshipClass(ThingClass):
             None)
         if default_super_class is None: return
         self.super_entity = Entity(
+            graph = self.graph,
             name = default_super_class.get('label'),
             namespace = default_super_class.get('namespace'))
         super_class_uri = self.super_entity.namespace[self.super_entity.get_name]

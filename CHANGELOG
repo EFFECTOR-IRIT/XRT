@@ -1,0 +1,5 @@
+XTR 1.2.1
+
+- Fix ObjectProperty naming issue by using domain name value in ObjectProperty name (multiple domains and ranges)
+- Fix RelationshipClass super entity creation (give relationship entity graph to its super entity as parameter)
+- 

@@ -41,7 +41,7 @@ class ObjectProperty(Entity):
     def set_name_with_convention(self):
         for word in EXCLUDED_STRING:
             self.name = self.name.replace(word, '')
-        self.name = PREFIX + self.name
+        self.name = PREFIX + self.domain.get_name + self.name
 
     def set_cardinalities(self):
         if MIN_CARD_TAG in self.node.attrib:
